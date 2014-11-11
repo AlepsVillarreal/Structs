@@ -1,0 +1,147 @@
+#include <stdio.h>
+#include <string.h>
+
+typedef struct
+{
+    char nom[30];
+    int cladep, anti;
+    float sue;
+}empleado;
+
+typedef struct
+{
+    int clave;
+    char nomdep[30];
+    int numemp;
+    char nomjefe[30];
+}departamento;
+
+void consultaEmpleado(empleado empl[], int e, departamento depa[], int d);
+void consultaDepa(empleado empl[], int e, departamento depa[], int d);
+int alta(empleado emp[], int e);
+
+main()
+{
+    empleado empl[100]={
+    "Juan Perez", 1, 10, 15000.0f,
+    "Maria Gomez", 1, 2, 8500.0f,
+    "Jaime Jamon", 1, 5, 11000.0f,
+    "Di Maria", 2, 8, 7000.0f
+    };
+    departamento depa[100]={
+    1, "Sistemas", 3, "Ruben Dario",
+    2, "Produccion", 20, "Esteban Garza"
+    };
+
+    int op, e=4, d=2;
+    do
+    {
+        system("cls");
+        printf("\n\t1. Consulta de empleados");
+        printf("\n\t2. Consulta de departamento");
+        printf("\n\t3. Alta de nuevos empleados");
+        printf("\n\t0. Salir");
+        printf("\n\t Opcion? \t:");
+        scanf("%d", &op);
+
+        switch(op)
+        {
+            case 1: consultaEmpleado(empl, e, depa, d);
+            break;
+            case 2: consultaDepa(empl, e, depa, d);
+            break;
+            case 3: e=alta(empl, e);
+            break;
+        }
+    }while(op);
+}
+
+void consultaEmpleado(empleado empl[], int e, departamento depa[], int d)
+{
+    char bus[30];
+    int i, j, band=0;
+
+    system("cls");
+    printf("nombre del empleado\t:");
+    fflush(stdin);
+    gets(bus);
+    for(i=0;i<e;i++)
+    {
+        if(strcmp(bus,empl[i].nom)==0)
+        {
+            band=1;
+            printf("\n Sueldo $%.2f", empl[i].sue);
+
+            for(j=0;j<d;j++)
+            {
+                if(empl[i].cladep==depa[j].clave)
+                {
+                    printf("\n Departamento: %s", depa[j].nomdep);
+                    printf("\nJefe: %s", depa[j].nomjefe);
+
+                }
+            }
+        }
+    }
+
+    if(band==0)
+    {
+        printf("Empleado no existe!\n");
+    }
+    getche();
+}
+
+void consultaDepa(empleado empl[], int e, departamento depa[], int d)
+{
+    char bus[30]="", nommay[30]="";
+    float suemay=0;
+    int i, j, band=0;
+
+    system("cls");
+    printf("\n Departamento a buscar\t:");
+    fflush(stdin);
+    gets(bus);
+    for(i=0;i<d;i++)
+    {
+        if(strcmp(bus,depa[i].nomdep)==0)
+        {
+            for(j=0;j<e;j++)
+            {
+                if(depa[i].clave==empl[j].cladep)
+                {
+                    if(empl[j].sue>suemay)
+                    {
+                        suemay=empl[j].sue;
+                        strcpy(nommay, empl[j].nom);
+                    }
+                }
+            }
+            band = 1;
+        }
+    }
+    if(band)
+    {
+        printf("\n El nombre del empleado con mayor sueldo es: %s", nommay);
+        printf("\n Y su sueldo es $%.2f\n", suemay);
+    }
+    else
+    {
+        printf("\n No se encontro del departamento!\n");
+    }
+    getche();
+}
+
+int alta(empleado empl[], int e)
+{
+    int band;
+    system("cls");
+    do
+    {
+      printf("\nNombre del empleado\t:"); fflush(stdin); gets(empl[e].nom);
+      printf("\nDepartamento\t:"); scanf("%d", &empl[e].cladep);
+      printf("\n Sueldo\t: "); scanf("%f", &empl[e].sue);
+      printf("\n Antieguedad\t:"); scanf("%d", &empl[e].anti);
+      e++;
+      printf("\n 0 Para salir\t:"); scanf("%d", &band);
+    }while(band);
+}
